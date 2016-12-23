@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" version="3.0">
+  <!--<error-page>-->
+    <!--<error-code>404</error-code>-->
+    <!--<location>/404.jsp</location>-->
+  <!--</error-page>-->
+  <!--<error-page>-->
+    <!--<error-code>500</error-code>-->
+    <!--<location>/500.jsp</location>-->
+  <!--</error-page>-->
+  <display-name>blog</display-name>
+  <welcome-file-list>
+    <welcome-file>/index.jsp</welcome-file>
+  </welcome-file-list>
+  <!-- 防止使用多个项目使用log4j名称冲突时 -->
+  <context-param>
+    <param-name>webAppRootKey</param-name>
+    <param-value>ssm-blog.root</param-value>
+  </context-param>
+  <!-- log4j -->
+  <context-param>
+    <param-name>log4jRefreshInterval</param-name>
+    <param-value>60000</param-value>
+  </context-param>
+  <listener>
+    <listener-class>
+      com.blog.listener.MyLog4jConfigListener
+    </listener-class>
+    <!--<listener-class>-->
+      <!--org.springframework.web.util.Log4jConfigListener-->
+    <!--</listener-class>-->
+  </listener>
+  <!-- log4j end -->
+  <!-- hibernate Session-->
+  <filter>
+    <filter-name>OpenSessionInViewFilter</filter-name>
+    <filter-class>org.springframework.orm.hibernate4.support.OpenSessionInViewFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>OpenSessionInViewFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <filter>
+    <filter-name>encodingFilter</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <async-supported>true</async-supported>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>encodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <!-- spring mvc-->
+  <servlet>
+    <servlet-name>dispatcherServlet</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>classpath:spring-mvc.xml</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>dispatcherServlet</servlet-name>
+    <url-pattern>/</url-pattern><!-- 拦截所有的请求 -->
+    <!-- 具体配置见：http://my.oschina.net/phacks/blog/505557?fromerr=Ccg1pVeB -->
+  </servlet-mapping>
+
+    <!-- spring start-->
+    <context-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>classpath:applicationContext.xml</param-value>
+    </context-param>
+    <listener>
+      <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <!-- spring end-->
+</web-app>

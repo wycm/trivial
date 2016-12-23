@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+	<!-- 请求参数的编码方式 -->  
+    <constant name="struts.i18n.encoding" value="UTF-8"/>  
+    <!-- 指定被struts2处理的请求后缀类型。多个用逗号隔开 -->  
+	<constant name="struts.action.extension" value="action,jsp,,"/>
+    <!-- 当struts.xml改动后，是否重新加载。默认值为false(生产环境下使用),开发阶段最好打开  -->  
+    <constant name="struts.configuration.xml.reload" value="true"/>  
+    <!-- 是否使用struts的开发模式。开发模式会有更多的调试信息。默认值为false(生产环境下使用),开发阶段最好打开  -->  
+    <constant name="struts.devMode" value="false"/>  
+    <!-- 设置浏览器是否缓存静态内容。默认值为true(生产环境下使用),开发阶段最好关闭  -->  
+    <constant name="struts.serve.static.browserCache" value="true" />  
+    <!-- 是否允许在OGNL表达式中调用静态方法，默认值为false -->  
+    <constant name="struts.ognl.allowStaticMethodAccess" value="true"/>
+    <!-- 自定义拦截器，设置默认的网站header部分和sider部分 -->
+    <!-- 前台 -->
+    <package name="index" namespace="/" extends="struts-default">
+    	<action name="index" class="indexAction"> 
+    		<result name="success">/index.jsp</result>
+    	</action>
+    	<!--直接访问jsp时，如果没有找到对应的action，则直接访问对应的文件  -->
+    	<action name="*" class="defaultAction">
+    		<result name="success">/{1}.jsp</result>
+    	</action>
+    </package>
+</struts>    
