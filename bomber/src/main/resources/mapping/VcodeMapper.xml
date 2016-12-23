@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wy.bomber.dao.VcodeDao" >
+  <resultMap id="VcodeResultMap" type="com.wy.bomber.pojo.Vcode" >
+    <id column="id" property="id"/>
+    <result column="url" property="url"/>
+    <result column="add_time" property="addTime"/>
+    <result column="vcode_type" property="vcodeType"/>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, url, add_time, vcode_type
+  </sql>
+  <select id="findById" resultMap="VcodeResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from source
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="findAll" resultMap="VcodeResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from source
+  </select>
+</mapper>

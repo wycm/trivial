@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wy.bomber.dao.SourceDao" >
+  <resultMap id="SourceResultMap" type="com.wy.bomber.pojo.Source" >
+    <id column="id" property="id"/>
+    <result column="url" property="url"/>
+    <result column="time_interval" property="timeInterval"/>
+    <result column="req_val" property="reqVal"/>
+    <result column="req_method" property="reqMethod"/>
+    <result column="site_name" property="siteName"/>
+    <result column="add_time" property="addTime"/>
+    <result column="vcode_id" property="vcodeId"/>
+  </resultMap>
+  <sql id="Source_Column_List" >
+    id, url, time_interval, req_val, req_method, site_name, add_time, vcode_id
+  </sql>
+  <select id="findById" resultMap="SourceResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Source_Column_List" />
+    from source
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="findAll" resultMap="SourceResultMap">
+    select
+    <include refid="Source_Column_List" />
+    from source
+  </select>
+
+  <select id="findAllAvailable" resultMap="SourceResultMap">
+    select
+    <include refid="Source_Column_List" />
+    from source WHERE status = 1
+  </select>
+</mapper>
