@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pwms.dao.NoticeTheroyContructionMapper" >
+  <resultMap id="BaseResultMap" type="com.pwms.pojo.NoticeTheroyContruction" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="summary" property="summary" jdbcType="VARCHAR" />
+    <result column="dateline" property="dateline" jdbcType="DATE" javaType="java.sql.Date"/>
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <!-- 文章类型 -->
+    <association property="articletype" javaType="com.pwms.pojo.Articletype">
+    	<!-- 两个表的字段如果有一样  查询出来一定要将字段重命名  否则赋值会出现问题-->
+    	<id column="id1" property="id" jdbcType="INTEGER" />
+	    <result column="value1" property="value" jdbcType="VARCHAR" />
+	    <result column="linkname1" property="linkname" jdbcType="VARCHAR" />
+	    <!-- 父文章类型 -->
+	    <association property="pArticletype" javaType="com.pwms.pojo.Articletype">
+	    	<id column="id2" property="id" jdbcType="INTEGER" />
+		    <result column="value2" property="value" jdbcType="VARCHAR" />
+		    <result column="linkname2" property="linkname" jdbcType="VARCHAR" />
+    	</association>
+    </association> 
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.pwms.pojo.NoticeTheroyContruction" extends="BaseResultMap" >
+    <result column="contents" property="contents" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  
+  <sql id="Base_Column_List" >
+    id, title, summary, dateline, user_id, type
+  </sql>
+  <sql id="Blob_Column_List" >
+    contents
+  </sql>
+  <sql id="article_articletype">
+  	n.id,n.title,n.summary,n.dateline,n.user_id,
+  	a.id id1,a.value value1,a.linkname linkname1,
+  	a1.id id2,a1.value value2,a1.linkname linkname2
+  </sql>
+  
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="article_articletype" />
+    ,
+    <include refid="Blob_Column_List" />
+    from notice_theory_construction n,articletype a left join articletype a1
+    on a.pid = a1.id where n.type = a.id and n.id = #{id,jdbcType=INTEGER}
+  </select> 
+  
+   <select id="selectByType" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="article_articletype"/>
+    from notice_theory_construction n,articletype a left join articletype a1
+    on a.pid = a1.id where (a.id = #{type} or a.pid = #{type}) and type = a.id
+  </select>
+  
+  <select id="selectAll" resultMap="BaseResultMap">
+    select 
+    <include refid="article_articletype"/>
+    from notice_theory_construction n,articletype a left join articletype a1
+    on a.pid = a1.id where n.type=a.id order by n.id
+  </select>
+  <!-- 根据文章类型下最新5篇文章，不包括新闻和党校公告-->
+  <select id="selectTopArticleByAtid" resultMap="BaseResultMap">
+    SELECT *
+	FROM
+	(	select 
+		<include refid="article_articletype"/>,
+	    ROW_NUMBER() OVER(partition by a1.id ORDER BY n.id) as rows
+	    from notice_theory_construction n,articletype a left join articletype a1
+	    on a.pid = a1.id where  n.type = a.id and a.id not in(12,23)
+	 ) as t
+	where t.[rows] &lt;= 5 and id2 in
+    <foreach collection="array" item="atId" index="index"
+            open="(" close=")" separator=",">
+            #{atId}
+    </foreach>
+    order by t.id desc;
+  </select>
+  <!--获取最新的党校公告和新闻各10篇-->
+  <select id="selectTopXWAndDXGG" resultMap="BaseResultMap">
+  	SELECT *
+	FROM
+	(	select 
+		<include refid="article_articletype"/>,
+	    ROW_NUMBER() OVER(partition by a1.id ORDER BY n.id) as rows
+	    from notice_theory_construction n,articletype a left join articletype a1
+	    on a.pid = a1.id where  n.type = a.id 
+	 ) as t
+	where t.[rows] &lt;= 10 and id1 in(12,23)
+    order by t.id desc;
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from notice_theory_construction
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.pwms.pojo.NoticeTheroyContruction" >
+    insert into notice_theory_construction (id, title, summary, 
+      dateline, user_id, article, 
+      contents)
+    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{summary,jdbcType=VARCHAR}, 
+      #{dateline,jdbcType=DATE}, #{userId,jdbcType=INTEGER}, #{articletype.id,jdbcType=INTEGER}, 
+      #{contents,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.pwms.pojo.NoticeTheroyContruction" >
+    insert into notice_theory_construction
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="summary != null" >
+        summary,
+      </if>
+      <if test="dateline != null" >
+        dateline,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="articletype.id != null" >
+        type,
+      </if>
+      <if test="contents != null" >
+        contents,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="summary != null" >
+        #{summary,jdbcType=VARCHAR},
+      </if>
+      <if test="dateline != null" >
+        #{dateline,jdbcType=DATE},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="articletype.id != null" >
+        #{articletype.id,jdbcType=INTEGER},
+      </if>
+      <if test="contents != null" >
+        #{contents,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pwms.pojo.NoticeTheroyContruction" >
+    update notice_theory_construction
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="summary != null" >
+        summary = #{summary,jdbcType=VARCHAR},
+      </if>
+      <if test="dateline != null" >
+        dateline = #{dateline,jdbcType=DATE},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="articletype.id != null" >
+        type = #{articletype.id,jdbcType=INTEGER},
+      </if>
+      <if test="contents != null" >
+        contents = #{contents,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.pwms.pojo.NoticeTheroyContruction" >
+    update notice_theory_construction
+    set title = #{title,jdbcType=VARCHAR},
+      summary = #{summary,jdbcType=VARCHAR},
+      dateline = #{dateline,jdbcType=DATE},
+      user_id = #{userId,jdbcType=INTEGER},
+      type = #{articletype.id,jdbcType=INTEGER},
+      contents = #{contents,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pwms.pojo.NoticeTheroyContruction" >
+    update notice_theory_construction
+    set title = #{title,jdbcType=VARCHAR},
+      summary = #{summary,jdbcType=VARCHAR},
+      dateline = #{dateline,jdbcType=DATE},
+      user_id = #{userId,jdbcType=INTEGER},
+      type = #{articletype.id,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

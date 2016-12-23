@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pwms.dao.ProcessRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.pwms.pojo.ProcessRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="process_id" property="processId" jdbcType="INTEGER" />
+    <result column="filepath" property="filepath" jdbcType="VARCHAR" />
+    <result column="grade" property="grade" jdbcType="INTEGER" />
+    <result column="dateline" property="dateline" jdbcType="DATE" javaType="java.sql.Date"/>
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.pwms.pojo.ProcessRecord" extends="BaseResultMap" >
+    <result column="explain" property="explain" jdbcType="LONGVARCHAR" />
+    <result column="feeling" property="feeling" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, process_id, filepath, grade, dateline, user_id
+  </sql>
+  <sql id="Blob_Column_List" >
+    explain, feeling
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from process_record
+    where process_id = #{0,jdbcType=INTEGER} and user_id = {1,jdbcType=INTEGER}
+  </select>
+   <select id="selectByProcessUser" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from process_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByUser" resultMap="ResultMapWithBLOBs" parameterType="com.pwms.pojo.User" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from process_record
+    where user_id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectLastByUser" resultType="java.lang.Integer" parameterType="com.pwms.pojo.User" >
+    select max(process_id)
+    from process_record
+    where user_id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from process_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.pwms.pojo.ProcessRecord" >
+    insert into process_record (id, process_id, filepath, 
+      grade, dateline, user_id, 
+      explain, feeling)
+    values (#{id,jdbcType=INTEGER}, #{processId,jdbcType=INTEGER}, #{filepath,jdbcType=VARCHAR}, 
+      #{grade,jdbcType=INTEGER}, #{dateline,jdbcType=DATE}, #{userId,jdbcType=INTEGER}, 
+      #{explain,jdbcType=LONGVARCHAR}, #{feeling,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.pwms.pojo.ProcessRecord" >
+    insert into process_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="processId != null" >
+        process_id,
+      </if>
+      <if test="filepath != null" >
+        filepath,
+      </if>
+      <if test="grade != null" >
+        grade,
+      </if>
+      <if test="dateline != null" >
+        dateline,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="explain != null" >
+        explain,
+      </if>
+      <if test="feeling != null" >
+        feeling,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="processId != null" >
+        #{processId,jdbcType=INTEGER},
+      </if>
+      <if test="filepath != null" >
+        #{filepath,jdbcType=VARCHAR},
+      </if>
+      <if test="grade != null" >
+        #{grade,jdbcType=INTEGER},
+      </if>
+      <if test="dateline != null" >
+        #{dateline,jdbcType=DATE},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="explain != null" >
+        #{explain,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="feeling != null" >
+        #{feeling,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pwms.pojo.ProcessRecord" >
+    update process_record
+    <set >
+      <if test="processId != null" >
+        process_id = #{processId,jdbcType=INTEGER},
+      </if>
+      <if test="filepath != null" >
+        filepath = #{filepath,jdbcType=VARCHAR},
+      </if>
+      <if test="grade != null" >
+        grade = #{grade,jdbcType=INTEGER},
+      </if>
+      <if test="dateline != null" >
+        dateline = #{dateline,jdbcType=DATE},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="explain != null" >
+        explain = #{explain,jdbcType=LONGVARCHAR},
+      </if>
+      <if test="feeling != null" >
+        feeling = #{feeling,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.pwms.pojo.ProcessRecord" >
+    update process_record
+    set process_id = #{processId,jdbcType=INTEGER},
+      filepath = #{filepath,jdbcType=VARCHAR},
+      grade = #{grade,jdbcType=INTEGER},
+      dateline = #{dateline,jdbcType=DATE},
+      user_id = #{userId,jdbcType=INTEGER},
+      explain = #{explain,jdbcType=LONGVARCHAR},
+      feeling = #{feeling,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pwms.pojo.ProcessRecord" >
+    update process_record
+    set process_id = #{processId,jdbcType=INTEGER},
+      filepath = #{filepath,jdbcType=VARCHAR},
+      grade = #{grade,jdbcType=INTEGER},
+      dateline = #{dateline,jdbcType=DATE},
+      user_id = #{userId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

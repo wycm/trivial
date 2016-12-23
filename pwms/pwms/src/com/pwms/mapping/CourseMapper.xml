@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pwms.dao.CourseMapper" >
+  <resultMap id="BaseResultMap" type="com.pwms.pojo.Course" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="summary" property="summary" jdbcType="VARCHAR" />
+    <result column="group_id" property="groupId" jdbcType="INTEGER" />
+    <result column="dateline" property="dateline" jdbcType="DATE" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="process_id" property="processId" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.pwms.pojo.Course" extends="BaseResultMap" >
+    <result column="explian" property="explian" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, title, summary, group_id, dateline, user_id, process_id, type
+  </sql>
+  <sql id="Blob_Column_List" >
+    explian
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from course
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByDate" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from course order by dateline desc
+  </select>
+  <select id="selectByGroupId" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from course where group_id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from course
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByGroupId" parameterType="java.lang.Integer" >
+    delete from course
+    where group_id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.pwms.pojo.Course" >
+    insert into course (id, title, summary, 
+      group_id, dateline, user_id, 
+      process_id, type, explian
+      )
+    values (#{id,jdbcType=INTEGER}, #{title,jdbcType=VARCHAR}, #{summary,jdbcType=VARCHAR}, 
+      #{groupId,jdbcType=INTEGER}, #{dateline,jdbcType=DATE}, #{userId,jdbcType=INTEGER}, 
+      #{processId,jdbcType=INTEGER}, #{type,jdbcType=INTEGER}, #{explian,jdbcType=LONGVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.pwms.pojo.Course" >
+    insert into course
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="title != null" >
+        title,
+      </if>
+      <if test="summary != null" >
+        summary,
+      </if>
+      <if test="groupId != null" >
+        group_id,
+      </if>
+      <if test="dateline != null" >
+        dateline,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="processId != null" >
+        process_id,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="explian != null" >
+        explian,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="title != null" >
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="summary != null" >
+        #{summary,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null" >
+        #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="dateline != null" >
+        #{dateline,jdbcType=DATE},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="processId != null" >
+        #{processId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="explian != null" >
+        #{explian,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pwms.pojo.Course" >
+    update course
+    <set >
+      <if test="title != null" >
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="summary != null" >
+        summary = #{summary,jdbcType=VARCHAR},
+      </if>
+      <if test="groupId != null" >
+        group_id = #{groupId,jdbcType=INTEGER},
+      </if>
+      <if test="dateline != null" >
+        dateline = #{dateline,jdbcType=DATE},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="processId != null" >
+        process_id = #{processId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="explian != null" >
+        explian = #{explian,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.pwms.pojo.Course" >
+    update course
+    set title = #{title,jdbcType=VARCHAR},
+      summary = #{summary,jdbcType=VARCHAR},
+      group_id = #{groupId,jdbcType=INTEGER},
+      dateline = #{dateline,jdbcType=DATE},
+      user_id = #{userId,jdbcType=INTEGER},
+      process_id = #{processId,jdbcType=INTEGER},
+      type = #{type,jdbcType=INTEGER},
+      explian = #{explian,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pwms.pojo.Course" >
+    update course
+    set title = #{title,jdbcType=VARCHAR},
+      summary = #{summary,jdbcType=VARCHAR},
+      group_id = #{groupId,jdbcType=INTEGER},
+      dateline = #{dateline,jdbcType=DATE},
+      user_id = #{userId,jdbcType=INTEGER},
+      process_id = #{processId,jdbcType=INTEGER},
+      type = #{type,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pwms.dao.JoinOutRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.pwms.pojo.JoinOutRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="out_unit" property="outUnit" jdbcType="VARCHAR" />
+    <result column="join_unit" property="joinUnit" jdbcType="VARCHAR" />
+    <result column="out_date" property="outDate" javaType="java.sql.Date" jdbcType="DATE" />
+    <result column="origin_contact_address" property="originContactAddress" jdbcType="VARCHAR" />
+    <result column="origin_contact_phone" property="originContactPhone" jdbcType="VARCHAR" />
+    <result column="dest_agent" property="destAgent" jdbcType="VARCHAR" />
+    <result column="dest_agent_phone" property="destAgentPhone" jdbcType="VARCHAR" />
+    <result column="join_date" property="joinDate" javaType="java.sql.Date" jdbcType="DATE" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, out_unit, join_unit, out_date, origin_contact_address, origin_contact_phone, 
+    dest_agent, dest_agent_phone, join_date, user_id
+  </sql>
+  <select id="findAll" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from join_out_record
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from join_out_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from join_out_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.pwms.pojo.JoinOutRecord" >
+    insert into join_out_record (id, name, out_unit, 
+      join_unit, out_date, origin_contact_address, 
+      origin_contact_phone, dest_agent, dest_agent_phone, 
+      join_date, user_id)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{outUnit,jdbcType=VARCHAR}, 
+      #{joinUnit,jdbcType=VARCHAR}, #{outDate,jdbcType=DATE}, #{originContactAddress,jdbcType=VARCHAR}, 
+      #{originContactPhone,jdbcType=VARCHAR}, #{destAgent,jdbcType=VARCHAR}, #{destAgentPhone,jdbcType=VARCHAR}, 
+      #{joinDate,jdbcType=DATE}, #{userId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.pwms.pojo.JoinOutRecord" >
+    insert into join_out_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="outUnit != null" >
+        out_unit,
+      </if>
+      <if test="joinUnit != null" >
+        join_unit,
+      </if>
+      <if test="outDate != null" >
+        out_date,
+      </if>
+      <if test="originContactAddress != null" >
+        origin_contact_address,
+      </if>
+      <if test="originContactPhone != null" >
+        origin_contact_phone,
+      </if>
+      <if test="destAgent != null" >
+        dest_agent,
+      </if>
+      <if test="destAgentPhone != null" >
+        dest_agent_phone,
+      </if>
+      <if test="joinDate != null" >
+        join_date,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="outUnit != null" >
+        #{outUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="joinUnit != null" >
+        #{joinUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="outDate != null" >
+        #{outDate,jdbcType=DATE},
+      </if>
+      <if test="originContactAddress != null" >
+        #{originContactAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="originContactPhone != null" >
+        #{originContactPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="destAgent != null" >
+        #{destAgent,jdbcType=VARCHAR},
+      </if>
+      <if test="destAgentPhone != null" >
+        #{destAgentPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="joinDate != null" >
+        #{joinDate,jdbcType=DATE},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pwms.pojo.JoinOutRecord" >
+    update join_out_record
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="outUnit != null" >
+        out_unit = #{outUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="joinUnit != null" >
+        join_unit = #{joinUnit,jdbcType=VARCHAR},
+      </if>
+      <if test="outDate != null" >
+        out_date = #{outDate,jdbcType=DATE},
+      </if>
+      <if test="originContactAddress != null" >
+        origin_contact_address = #{originContactAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="originContactPhone != null" >
+        origin_contact_phone = #{originContactPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="destAgent != null" >
+        dest_agent = #{destAgent,jdbcType=VARCHAR},
+      </if>
+      <if test="destAgentPhone != null" >
+        dest_agent_phone = #{destAgentPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="joinDate != null" >
+        join_date = #{joinDate,jdbcType=DATE},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pwms.pojo.JoinOutRecord" >
+    update join_out_record
+    set name = #{name,jdbcType=VARCHAR},
+      out_unit = #{outUnit,jdbcType=VARCHAR},
+      join_unit = #{joinUnit,jdbcType=VARCHAR},
+      out_date = #{outDate,jdbcType=DATE},
+      origin_contact_address = #{originContactAddress,jdbcType=VARCHAR},
+      origin_contact_phone = #{originContactPhone,jdbcType=VARCHAR},
+      dest_agent = #{destAgent,jdbcType=VARCHAR},
+      dest_agent_phone = #{destAgentPhone,jdbcType=VARCHAR},
+      join_date = #{joinDate,jdbcType=DATE},
+      user_id = #{userId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

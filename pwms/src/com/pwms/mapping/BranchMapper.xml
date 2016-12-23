@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pwms.dao.BranchMapper" >
+  <resultMap id="BaseResultMap" type="com.pwms.pojo.Branch" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="leader_id" property="leaderId" jdbcType="INTEGER" />
+    <result column="branch_name" property="branchName" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, leader_id, branch_name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from branch
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="findByName" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from branch
+    where branch_name = #{name,jdbcType=INTEGER}
+  </select>
+  <select id="findAll" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from branch
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from branch
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.pwms.pojo.Branch" >
+    insert into branch (id, leader_id, branch_name
+      )
+    values (#{id,jdbcType=INTEGER}, #{leaderId,jdbcType=INTEGER}, #{branchName,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.pwms.pojo.Branch" >
+    insert into branch
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="leaderId != null" >
+        leader_id,
+      </if>
+      <if test="branchName != null" >
+        branch_name,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="leaderId != null" >
+        #{leaderId,jdbcType=INTEGER},
+      </if>
+      <if test="branchName != null" >
+        #{branchName,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pwms.pojo.Branch" >
+    update branch
+    <set >
+      <if test="leaderId != null" >
+        leader_id = #{leaderId,jdbcType=INTEGER},
+      </if>
+      <if test="branchName != null" >
+        branch_name = #{branchName,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pwms.pojo.Branch" >
+    update branch
+    set leader_id = #{leaderId,jdbcType=INTEGER},
+      branch_name = #{branchName,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

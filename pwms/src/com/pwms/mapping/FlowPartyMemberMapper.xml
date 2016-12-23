@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pwms.dao.FlowPartyMemberMapper" >
+  <resultMap id="BaseResultMap" type="com.pwms.pojo.FlowPartyMember" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="sex" property="sex" jdbcType="VARCHAR" />
+    <result column="nation" property="nation" jdbcType="VARCHAR" />
+    <result column="native_place" property="nativePlace" jdbcType="VARCHAR" />
+    <result column="birthday" property="birthday" jdbcType="DATE" />
+    <result column="culture" property="culture" jdbcType="VARCHAR" />
+    <result column="join_date" property="joinDate" jdbcType="VARCHAR" />
+    <result column="identity_id" property="identityId" jdbcType="VARCHAR" />
+    <result column="contact_phone" property="contactPhone" jdbcType="VARCHAR" />
+    <result column="census_address" property="censusAddress" jdbcType="VARCHAR" />
+    <result column="original_contacts" property="originalContacts" jdbcType="VARCHAR" />
+    <result column="original_contacts_phone" property="originalContactsPhone" jdbcType="VARCHAR" />
+    <result column="dest_branch" property="destBranch" jdbcType="VARCHAR" />
+    <result column="join_dest_date" property="joinDestDate" jdbcType="DATE" />
+    <result column="dest_branch_contacts" property="destBranchContacts" jdbcType="VARCHAR" />
+    <result column="dest_contacts_phone" property="destContactsPhone" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, sex, nation, native_place, birthday, culture, join_date, identity_id, contact_phone, 
+    census_address, original_contacts, original_contacts_phone, dest_branch, join_dest_date, 
+    dest_branch_contacts, dest_contacts_phone
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from flow_party_member
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from flow_party_member
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.pwms.pojo.FlowPartyMember" >
+    insert into flow_party_member (id, name, sex, 
+      nation, native_place, birthday, 
+      culture, join_date, identity_id, 
+      contact_phone, census_address, original_contacts, 
+      original_contacts_phone, dest_branch, join_dest_date, 
+      dest_branch_contacts, dest_contacts_phone)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{sex,jdbcType=VARCHAR}, 
+      #{nation,jdbcType=VARCHAR}, #{nativePlace,jdbcType=VARCHAR}, #{birthday,jdbcType=DATE}, 
+      #{culture,jdbcType=VARCHAR}, #{joinDate,jdbcType=VARCHAR}, #{identityId,jdbcType=VARCHAR}, 
+      #{contactPhone,jdbcType=VARCHAR}, #{censusAddress,jdbcType=VARCHAR}, #{originalContacts,jdbcType=VARCHAR}, 
+      #{originalContactsPhone,jdbcType=VARCHAR}, #{destBranch,jdbcType=VARCHAR}, #{joinDestDate,jdbcType=DATE}, 
+      #{destBranchContacts,jdbcType=VARCHAR}, #{destContactsPhone,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.pwms.pojo.FlowPartyMember" >
+    insert into flow_party_member
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="sex != null" >
+        sex,
+      </if>
+      <if test="nation != null" >
+        nation,
+      </if>
+      <if test="nativePlace != null" >
+        native_place,
+      </if>
+      <if test="birthday != null" >
+        birthday,
+      </if>
+      <if test="culture != null" >
+        culture,
+      </if>
+      <if test="joinDate != null" >
+        join_date,
+      </if>
+      <if test="identityId != null" >
+        identity_id,
+      </if>
+      <if test="contactPhone != null" >
+        contact_phone,
+      </if>
+      <if test="censusAddress != null" >
+        census_address,
+      </if>
+      <if test="originalContacts != null" >
+        original_contacts,
+      </if>
+      <if test="originalContactsPhone != null" >
+        original_contacts_phone,
+      </if>
+      <if test="destBranch != null" >
+        dest_branch,
+      </if>
+      <if test="joinDestDate != null" >
+        join_dest_date,
+      </if>
+      <if test="destBranchContacts != null" >
+        dest_branch_contacts,
+      </if>
+      <if test="destContactsPhone != null" >
+        dest_contacts_phone,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="nation != null" >
+        #{nation,jdbcType=VARCHAR},
+      </if>
+      <if test="nativePlace != null" >
+        #{nativePlace,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        #{birthday,jdbcType=DATE},
+      </if>
+      <if test="culture != null" >
+        #{culture,jdbcType=VARCHAR},
+      </if>
+      <if test="joinDate != null" >
+        #{joinDate,jdbcType=VARCHAR},
+      </if>
+      <if test="identityId != null" >
+        #{identityId,jdbcType=VARCHAR},
+      </if>
+      <if test="contactPhone != null" >
+        #{contactPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="censusAddress != null" >
+        #{censusAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="originalContacts != null" >
+        #{originalContacts,jdbcType=VARCHAR},
+      </if>
+      <if test="originalContactsPhone != null" >
+        #{originalContactsPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="destBranch != null" >
+        #{destBranch,jdbcType=VARCHAR},
+      </if>
+      <if test="joinDestDate != null" >
+        #{joinDestDate,jdbcType=DATE},
+      </if>
+      <if test="destBranchContacts != null" >
+        #{destBranchContacts,jdbcType=VARCHAR},
+      </if>
+      <if test="destContactsPhone != null" >
+        #{destContactsPhone,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pwms.pojo.FlowPartyMember" >
+    update flow_party_member
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null" >
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="nation != null" >
+        nation = #{nation,jdbcType=VARCHAR},
+      </if>
+      <if test="nativePlace != null" >
+        native_place = #{nativePlace,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null" >
+        birthday = #{birthday,jdbcType=DATE},
+      </if>
+      <if test="culture != null" >
+        culture = #{culture,jdbcType=VARCHAR},
+      </if>
+      <if test="joinDate != null" >
+        join_date = #{joinDate,jdbcType=VARCHAR},
+      </if>
+      <if test="identityId != null" >
+        identity_id = #{identityId,jdbcType=VARCHAR},
+      </if>
+      <if test="contactPhone != null" >
+        contact_phone = #{contactPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="censusAddress != null" >
+        census_address = #{censusAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="originalContacts != null" >
+        original_contacts = #{originalContacts,jdbcType=VARCHAR},
+      </if>
+      <if test="originalContactsPhone != null" >
+        original_contacts_phone = #{originalContactsPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="destBranch != null" >
+        dest_branch = #{destBranch,jdbcType=VARCHAR},
+      </if>
+      <if test="joinDestDate != null" >
+        join_dest_date = #{joinDestDate,jdbcType=DATE},
+      </if>
+      <if test="destBranchContacts != null" >
+        dest_branch_contacts = #{destBranchContacts,jdbcType=VARCHAR},
+      </if>
+      <if test="destContactsPhone != null" >
+        dest_contacts_phone = #{destContactsPhone,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pwms.pojo.FlowPartyMember" >
+    update flow_party_member
+    set name = #{name,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=VARCHAR},
+      nation = #{nation,jdbcType=VARCHAR},
+      native_place = #{nativePlace,jdbcType=VARCHAR},
+      birthday = #{birthday,jdbcType=DATE},
+      culture = #{culture,jdbcType=VARCHAR},
+      join_date = #{joinDate,jdbcType=VARCHAR},
+      identity_id = #{identityId,jdbcType=VARCHAR},
+      contact_phone = #{contactPhone,jdbcType=VARCHAR},
+      census_address = #{censusAddress,jdbcType=VARCHAR},
+      original_contacts = #{originalContacts,jdbcType=VARCHAR},
+      original_contacts_phone = #{originalContactsPhone,jdbcType=VARCHAR},
+      dest_branch = #{destBranch,jdbcType=VARCHAR},
+      join_dest_date = #{joinDestDate,jdbcType=DATE},
+      dest_branch_contacts = #{destBranchContacts,jdbcType=VARCHAR},
+      dest_contacts_phone = #{destContactsPhone,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

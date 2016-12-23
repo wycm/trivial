@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pwms.dao.ExamRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.pwms.pojo.ExamRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="score" property="score" jdbcType="INTEGER" />
+    <result column="time" property="time" jdbcType="DATE" javaType="java.sql.Date"/>
+  </resultMap>
+  <!-- 关联Exam和User 
+  	这种情况存在1+N
+  	尽量不用嵌套查询
+  -->
+  <resultMap id="NestSelect" type="com.pwms.pojo.ExamRecord" extends="BaseResultMap">
+  	<association property="exam" column="exam_id"  select="selectExam"/>
+  	<association property="user" column="user_id"  select="selectUser"/>
+  </resultMap>
+  <resultMap id="NestResultMap" type="com.pwms.pojo.ExamRecord" extends="BaseResultMap">
+  	<association property="exam" javaType="com.pwms.pojo.Exam">
+  		<id column="exam_id" property="id" jdbcType="INTEGER" />
+	    <result column="exam_name" property="name" jdbcType="VARCHAR" />
+  	</association>
+  	<association property="user" javaType="com.pwms.pojo.User">
+  		<id column="user_id" property="id" jdbcType="INTEGER" />
+  		<id column="user_f_id" property="stuOrJobid" jdbcType="VARCHAR" />
+	    <result column="user_name" property="name" jdbcType="VARCHAR" />
+  	</association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    er.id id, er.score score, er.time time
+  </sql>
+  <sql id="Nest_Column_List">
+  	er.exam_id,er.user_id
+  </sql>
+  <sql id="User_Column_List">
+  	u.id user_id,u.f_id as user_f_id,u.name as user_name
+  </sql>
+  <sql id="Exam_Column_List">
+  	e.id exam_id,e.name exam_name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />,
+    <include refid="Nest_Column_List"/>
+    from exam_record as er
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByExamidUserid" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />,
+    <include refid="Nest_Column_List"/>
+    from exam_record as er
+    where exam_id = #{0,jdbcType=INTEGER} and user_id = #{1,jdbcType=INTEGER} order by time desc
+  </select>
+  <select id="selectByUserid" resultMap="NestResultMap"  parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />,
+    <include refid="Exam_Column_List" />
+    from exam_record as er,exam as e
+    where er.exam_id=e.id and er.user_id=#{userId,jdbcType=INTEGER}
+  </select>
+  <select id="selectUser" resultType="com.pwms.pojo.User" parameterType="java.lang.Integer">
+  	select
+  	<include refid="User_Column_List" />
+  	from pw_user
+  	where id=#{id}
+  </select>
+  <select id="selectExam" resultType="com.pwms.pojo.Exam" parameterType="java.lang.Integer">
+  	select
+  	<include refid="Exam_Column_List" />
+  	from exam
+  	where id=#{id}
+  </select>
+  <select id="selectAll" resultMap="NestResultMap">
+  	select 
+  	<include refid="Base_Column_List" />,
+    <include refid="Exam_Column_List"/>,
+    <include refid="User_Column_List"/>
+    from exam_record er,exam e,pw_user u
+    where er.exam_id=e.id and er.user_id=u.id
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from exam_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.pwms.pojo.ExamRecord" >
+    insert into exam_record (id, exam_id, score, 
+      user_id)
+    values (#{id,jdbcType=INTEGER}, #{examId,jdbcType=INTEGER}, #{score,jdbcType=INTEGER}, 
+      #{userId,jdbcType=INTEGER}, #{time,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.pwms.pojo.ExamRecord" >
+    insert into exam_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="examId != null" >
+        exam_id,
+      </if>
+      <if test="score != null" >
+        score,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="time != null" >
+        time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="examId != null" >
+        #{examId,jdbcType=INTEGER},
+      </if>
+      <if test="score != null" >
+        #{score,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="time != null" >
+        #{time,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pwms.pojo.ExamRecord" >
+    update exam_record
+    <set >
+      <if test="examId != null" >
+        exam_id = #{examId,jdbcType=INTEGER},
+      </if>
+      <if test="score != null" >
+        score = #{score,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="time != null" >
+        time = #{time,jdbcType=DATE},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pwms.pojo.ExamRecord" >
+    update exam_record
+    set exam_id = #{examId,jdbcType=INTEGER},
+      score = #{score,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER},
+      time = #{time,jdbcType=DATE}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

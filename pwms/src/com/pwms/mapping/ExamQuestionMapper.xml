@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pwms.dao.ExamQuestionMapper" >
+  <resultMap id="BaseResultMap" type="com.pwms.pojo.ExamQuestion" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="exam_id" property="examId" jdbcType="INTEGER" />
+    <result column="option_A" property="optionA" jdbcType="VARCHAR" />
+    <result column="option_B" property="optionB" jdbcType="VARCHAR" />
+    <result column="option_C" property="optionC" jdbcType="VARCHAR" />
+    <result column="option_D" property="optionD" jdbcType="VARCHAR" />
+    <result column="answer" property="answer" jdbcType="VARCHAR" />
+  </resultMap>
+  <resultMap id="ResultMapWithBLOBs" type="com.pwms.pojo.ExamQuestion" extends="BaseResultMap" >
+    <result column="question" property="question" jdbcType="LONGVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, exam_id, option_A, option_B, option_C, option_D, answer
+  </sql>
+  <sql id="Blob_Column_List" >
+    question
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from exam_question
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+    <select id="selectByExamId" resultMap="ResultMapWithBLOBs" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from exam_question
+    where exam_id = #{examid,jdbcType=INTEGER}
+  </select>
+  <select id="randomSelectByExamId" resultMap="ResultMapWithBLOBs">
+    select top ${count}
+    id, exam_id, option_A, option_B, option_C, option_D
+    ,
+    <include refid="Blob_Column_List" />
+    from exam_question
+    where exam_id = #{examid} ORDER BY NEWID()
+  </select>
+  <select id="selectAll" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from exam_question
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from exam_question
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.pwms.pojo.ExamQuestion" >
+    insert into exam_question (id, exam_id, option_A, 
+      option_B, option_C, option_D, 
+      answer, question)
+    values (#{id,jdbcType=INTEGER}, #{examId,jdbcType=INTEGER}, #{optionA,jdbcType=VARCHAR}, 
+      #{optionB,jdbcType=VARCHAR}, #{optionC,jdbcType=VARCHAR}, #{optionD,jdbcType=VARCHAR}, 
+      #{answer,jdbcType=VARCHAR}, #{question,jdbcType=LONGVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.pwms.pojo.ExamQuestion" >
+    insert into exam_question
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="examId != null" >
+        exam_id,
+      </if>
+      <if test="optionA != null" >
+        option_A,
+      </if>
+      <if test="optionB != null" >
+        option_B,
+      </if>
+      <if test="optionC != null" >
+        option_C,
+      </if>
+      <if test="optionD != null" >
+        option_D,
+      </if>
+      <if test="answer != null" >
+        answer,
+      </if>
+      <if test="question != null" >
+        question,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="examId != null" >
+        #{examId,jdbcType=INTEGER},
+      </if>
+      <if test="optionA != null" >
+        #{optionA,jdbcType=VARCHAR},
+      </if>
+      <if test="optionB != null" >
+        #{optionB,jdbcType=VARCHAR},
+      </if>
+      <if test="optionC != null" >
+        #{optionC,jdbcType=VARCHAR},
+      </if>
+      <if test="optionD != null" >
+        #{optionD,jdbcType=VARCHAR},
+      </if>
+      <if test="answer != null" >
+        #{answer,jdbcType=VARCHAR},
+      </if>
+      <if test="question != null" >
+        #{question,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pwms.pojo.ExamQuestion" >
+    update exam_question
+    <set >
+      <if test="examId != null" >
+        exam_id = #{examId,jdbcType=INTEGER},
+      </if>
+      <if test="optionA != null" >
+        option_A = #{optionA,jdbcType=VARCHAR},
+      </if>
+      <if test="optionB != null" >
+        option_B = #{optionB,jdbcType=VARCHAR},
+      </if>
+      <if test="optionC != null" >
+        option_C = #{optionC,jdbcType=VARCHAR},
+      </if>
+      <if test="optionD != null" >
+        option_D = #{optionD,jdbcType=VARCHAR},
+      </if>
+      <if test="answer != null" >
+        answer = #{answer,jdbcType=VARCHAR},
+      </if>
+      <if test="question != null" >
+        question = #{question,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKeyWithBLOBs" parameterType="com.pwms.pojo.ExamQuestion" >
+    update exam_question
+    set exam_id = #{examId,jdbcType=INTEGER},
+      option_A = #{optionA,jdbcType=VARCHAR},
+      option_B = #{optionB,jdbcType=VARCHAR},
+      option_C = #{optionC,jdbcType=VARCHAR},
+      option_D = #{optionD,jdbcType=VARCHAR},
+      answer = #{answer,jdbcType=VARCHAR},
+      question = #{question,jdbcType=LONGVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pwms.pojo.ExamQuestion" >
+    update exam_question
+    set exam_id = #{examId,jdbcType=INTEGER},
+      option_A = #{optionA,jdbcType=VARCHAR},
+      option_B = #{optionB,jdbcType=VARCHAR},
+      option_C = #{optionC,jdbcType=VARCHAR},
+      option_D = #{optionD,jdbcType=VARCHAR},
+      answer = #{answer,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

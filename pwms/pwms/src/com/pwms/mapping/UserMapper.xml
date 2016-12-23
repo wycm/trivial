@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pwms.dao.UserMapper" >
+  <resultMap id="UserResultMap" type="com.pwms.pojo.User" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="f_id" property="stuOrJobid" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="process_id" property="processId" jdbcType="INTEGER" />
+    <result column="type" property="type" jdbcType="INTEGER" />
+    <result column="register_time" property="registerTime" javaType="java.sql.Timestamp" jdbcType="DATE" />
+  </resultMap>
+  <sql id="User_Column_List" >
+    id, f_id, name, password, process_id, type, register_time
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="UserResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="User_Column_List" />
+    from pw_user
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectdByStuid" resultMap="UserResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="User_Column_List" />
+    from pw_user
+    where f_id = #{id,jdbcType=VARCHAR}
+  </select>
+  <select id="selectByNameOrFid" resultMap="UserResultMap">
+    select 
+    <include refid="User_Column_List" />
+    from pw_user
+    where (f_id = #{0, jdbcType=VARCHAR} or name = #{0, jdbcType=VARCHAR}) and password = #{1, jdbcType=VARCHAR}
+  </select>
+  <select id="selectByLoginfo" resultMap="UserResultMap"  parameterType="java.lang.String">
+    select 
+    <include refid="User_Column_List" />
+    from pw_user
+    where f_id = #{loginfo, jdbcType=VARCHAR} or name = #{loginfo, jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from pw_user
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <update id="updateByUserid" parameterType="com.pwms.pojo.User">
+    update pw_user set
+    <trim suffixOverrides="," suffix="" prefix="">
+		<if test="name != null">name = #{name,jdbcType=VARCHAR}, </if>
+		<if test="password != null">password = #{password,jdbcType=VARCHAR}, </if>
+		<if test="processId != null">process_id = #{processId,jdbcType=INTEGER}, </if>
+		<if test="type != null">type = #{type,jdbcType=INTEGER}, </if>
+		<if test="registerTime != null">register_time = #{registerTime,jdbcType=DATE}, </if>
+	</trim>
+	where id = #{id,jdbcType=INTEGER}
+  </update>
+  <insert id="insert" parameterType="com.pwms.pojo.User" >
+    insert into pw_user (f_id, name, password, process_id, type, register_time)
+    values (#{StuOrJobid, jdbcType=VARCHAR}, #{name,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{processId,jdbcType=INTEGER}, #{type,jdbcType=VARCHAR}, #{registerTime,jdbcType=DATE})
+  </insert>
+  <insert id="insertSelective" parameterType="com.pwms.pojo.User">
+	insert into pw_user
+	<trim suffixOverrides="," suffix=")" prefix="(">
+		<if test="id != null"> id, </if>
+		<if test="StuOrJobid != null"> f_id, </if>
+		<if test="name != null"> name, </if>
+		<if test="password != null"> password, </if>
+		<if test="processId != null"> process_id, </if>
+		<if test="type != null"> type, </if>
+		<if test="registerTime != null"> register_time, </if>
+	</trim>
+	<trim suffixOverrides="," suffix=")" prefix="values (">
+		<if test="id != null"> #{id,jdbcType=INTEGER}, </if>
+		<if test="StuOrJobid != null"> #{StuOrJobid,jdbcType=VARCHAR}, </if>
+		<if test="name != null"> #{name,jdbcType=VARCHAR}, </if>
+		<if test="password != null"> #{password,jdbcType=VARCHAR}, </if>
+		<if test="processId != null"> #{processId,jdbcType=INTEGER}, </if>
+		<if test="type != null"> #{type,jdbcType=INTEGER}, </if>
+		<if test="registerTime != null"> #{registerTime,jdbcType=DATE}, </if>
+	</trim>
+   </insert>
+  <!--<insert id="insertSelective" parameterType="com.pwms.pojo.User" >
+    insert into userinfo
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userName != null" >
+        username,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="age != null" >
+        age,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userName != null" >
+        #{userName,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="age != null" >
+        #{age,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  -->
+</mapper>

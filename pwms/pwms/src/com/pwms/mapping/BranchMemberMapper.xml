@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pwms.dao.BranchMemberMapper" >
+  <resultMap id="BaseResultMap" type="com.pwms.pojo.BranchMember" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="branch_id" property="branchId" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <!-- 支部 -->
+    <association property="branch" javaType="com.pwms.pojo.Branch">
+    	<id column="id1" property="id" jdbcType="INTEGER" />
+	    <result column="leader_id" property="leaderId" jdbcType="VARCHAR" />
+	    <result column="branch_name" property="branchName" jdbcType="VARCHAR" />
+    </association>
+    <!-- 用户 -->
+    <association property="user" javaType="com.pwms.pojo.User">
+    	<id column="id2" property="id" jdbcType="INTEGER" />
+	    <result column="name" property="name" jdbcType="VARCHAR" />
+    </association>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, branch_id, user_id
+  </sql>
+  <sql id="BranchMember_Column_List" >
+    bm.id as id,bm.user_id as user_id
+  </sql>
+  <sql id="Branch_Column_list">
+  	b.id as id1,b.leader_id,b.branch_name
+  </sql>
+  <sql id="User_Column_list">
+  	u.id as id2,u.name as name
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="BranchMember_Column_List" />,
+    <include refid="Branch_Column_list" />
+    from branch_member as bm,branch as b
+    where bm.branch_id = b.id and id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByUserId" resultMap="BaseResultMap" parameterType="com.pwms.pojo.User" >
+    select 
+    <include refid="BranchMember_Column_List" />,
+    <include refid="Branch_Column_list" />
+    from branch_member as bm,branch as b
+    where bm.branch_id = b.id and user_id = #{id,jdbcType=INTEGER}
+  </select>
+   <select id="selectSelective" resultMap="BaseResultMap" parameterType="com.pwms.pojo.BranchMember" >
+    select 
+    <include refid="Base_Column_List" />
+    from branch_member
+    <trim prefix="where " suffix="" suffixOverrides=" and " >
+      <if test="branchId != null" >
+        branch_id = #{branchId,jdbcType=INTEGER} and
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER} and
+      </if>
+    </trim>
+  </select>
+  <select id="selectByBranchId" resultMap="BaseResultMap" parameterType="com.pwms.pojo.Branch" >
+    select 
+    <include refid="BranchMember_Column_List" />,
+    <include refid="User_Column_list" />
+    from branch_member as bm,pw_user as u
+    where bm.user_id = u.id and branch_id =  #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from branch_member
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.pwms.pojo.BranchMember" >
+    insert into branch_member (id, branch_id, user_id
+      )
+    values (#{id,jdbcType=INTEGER}, #{branchId,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.pwms.pojo.BranchMember" >
+    insert into branch_member
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="branchId != null" >
+        branch_id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="branchId != null" >
+        #{branchId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pwms.pojo.BranchMember" >
+    update branch_member
+    <set >
+      <if test="branchId != null" >
+        branch_id = #{branchId,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pwms.pojo.BranchMember" >
+    update branch_member
+    set branch_id = #{branchId,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

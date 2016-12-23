@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pwms.dao.ArticletypeMapper" >
+
+	<sql id="Base_Column_List" >
+    id, value, linkname, pid
+  </sql>
+  <sql id="PArticletype_Column_List">
+  	a.id id,a.value value,a.linkname linkname,
+  	b.id id1,b.value value1,b.linkname linkname1
+  </sql>
+  <sql id="Article_Column_List">
+  	a.id,a.value,a.linkname,
+  	a1.id id1,a1.value value1,a1.linkname linkname1,
+  	n.id id2,n.title title2,n.summary summary2,n.dateline dateline2,n.user_id userId2
+  </sql>
+  <!-- 
+      	方式一: 嵌套结果: 使用嵌套结果映射来处理重复的联合结果的子集
+  -->
+  <resultMap id="BaseResultMap" type="com.pwms.pojo.Articletype" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="value" property="value" jdbcType="VARCHAR" />
+    <result column="linkname" property="linkname" jdbcType="VARCHAR" />
+  </resultMap>
+
+  <resultMap id="BaseResultMap1" type="com.pwms.pojo.Articletype" extends="BaseResultMap">
+    <association property="pArticletype" javaType="com.pwms.pojo.Articletype">
+    	<!-- 两个表的字段如果有一样  查询出来一定要将字段重命名  否则赋值会出现问题-->
+    	<id column="id1" property="id" jdbcType="INTEGER" />
+	    <result column="value1" property="value" jdbcType="VARCHAR" />
+	    <result column="linkname1" property="linkname" jdbcType="VARCHAR" />
+    </association>
+  </resultMap>
+  
+  <resultMap id="BaseResultMap2" type="com.pwms.pojo.Articletype" extends="BaseResultMap1">
+  		<collection property="articles" ofType="com.pwms.pojo.NoticeTheroyContruction">
+	    	<!-- 表的字段如果有一样  查询出来一定要将字段重命名  否则赋值会出现问题-->
+	    	<id column="id2" property="id" jdbcType="INTEGER" /> 
+	    	<result column="title2" property="title" jdbcType="VARCHAR" />
+		    <result column="summary2" property="summary" jdbcType="VARCHAR" />
+		    <result column="dateline2" property="dateline" jdbcType="DATE" javaType="java.sql.Date"/>
+		    <result column="user_id2" property="userId" jdbcType="INTEGER" />
+		    <!-- <result column="contents" property="contents" jdbcType="LONGVARCHAR" /> -->
+   		</collection> 
+  </resultMap>
+  
+  <resultMap id="article" type="com.pwms.pojo.NoticeTheroyContruction">
+	    	<id column="id" property="id" jdbcType="INTEGER" /> 
+	    	<result column="title" property="title" jdbcType="VARCHAR" />
+		    <result column="summary" property="summary" jdbcType="VARCHAR" />
+		    <result column="dateline" property="dateline" jdbcType="DATE" javaType="java.sql.Date"/>
+		    <result column="user_id" property="userId" jdbcType="INTEGER" />
+		    <!-- <result column="contents" property="contents" jdbcType="LONGVARCHAR" /> -->
+  </resultMap>
+  
+  <select id="selectByPrimaryKey1" resultMap="BaseResultMap1" parameterType="java.lang.Integer" >
+    select 
+    	<include refid="PArticletype_Column_List"/>
+    from articletype a left join articletype b
+    on a.pid = b.id where a.id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByPrimaryKey2" resultMap="BaseResultMap2" parameterType="java.lang.Integer">
+  	select 
+    	<include refid="Article_Column_List"/>
+    from notice_theory_construction n, articletype a left join articletype a1
+    on a.pid = a1.id where a.id = n.type and a.id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <!-- 查询该文章类型，并获取所有文章， -->
+  <!-- <select id="selectByLinkname" resultMap="BaseResultMap2" parameterType="java.lang.String" >
+    select 
+     a1.id,a1.value,a1.linkname,
+     a2.id id1,a2.value value1,a2.linkname linkname1,
+     n.id id2,n.title title2,n.dateline dateline2
+	from
+	articletype a1 LEFT JOIN notice_theory_construction n 
+	ON a1.id = n.type LEFT JOIN articletype a2
+	ON  a1.pid= a2.id
+	where a1.linkname = #{linkname,jdbcType=VARCHAR}
+  </select> -->
+  
+  <select id="selectByPid" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from articletype
+    where pid = #{pid,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectAllChildrenType" resultMap="BaseResultMap">
+  	select 
+    <include refid="Base_Column_List" />
+    from articletype
+    where pid is not null
+  </select>
+  
+  <!-- 
+  		方式二：嵌套查询：通过执行另外一个SQL映射语句来返回预期的复杂类型
+   -->	
+   <select id="selectByPrimaryKey" resultMap="NestSelect" parameterType="java.lang.Integer" >
+    select 
+    	<include refid="Base_Column_List"/>
+    from articletype a
+    where a.id = #{id,jdbcType=INTEGER}
+  </select>
+  
+  <resultMap id="NestSelect" type="com.pwms.pojo.Articletype" extends="BaseResultMap">
+	    <association property="pArticletype" column="pid"  select="selectPArticletype"/>
+	    <collection property="articles" column="id" ofType="com.pwms.pojo.NoticeTheroyContruction" 
+	    select="selectArticlesByType"/>
+  </resultMap>
+  
+  <select id="selectPArticletype" resultType="com.pwms.pojo.Articletype" parameterType="java.lang.Integer" >
+    select 
+    	<include refid="Base_Column_List"/>
+    from articletype a
+    where a.id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectArticlesByType" resultMap="article" parameterType="java.lang.Integer">
+  	select
+  		N.id,
+  		N.title,
+  		N.summary,
+  		N.dateline
+  	from notice_theory_construction N
+  	where type = #{type,jdbcType=INTEGER}
+  </select>
+  
+  <select id="selectByLinkname" resultMap="NestSelect" parameterType="java.lang.String" >
+    select 
+    	<include refid="Base_Column_List"/>
+    from articletype a
+    where a.linkname = #{linkname,jdbcType=INTEGER}
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from articletype
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
+  <insert id="insert" parameterType="com.pwms.pojo.Articletype" >
+    insert into articletype (id, value, pid, 
+      linkname)
+    values (#{id,jdbcType=INTEGER}, #{value,jdbcType=VARCHAR}, #{pid,jdbcType=INTEGER}, 
+      #{linkname,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.pwms.pojo.Articletype" >
+    insert into articletype
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="value != null" >
+        value,
+      </if>
+      <if test="pid != null" >
+        pid,
+      </if>
+      <if test="linkname != null" >
+        linkname,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="value != null" >
+        #{value,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null" >
+        #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="linkname != null" >
+        #{linkname,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pwms.pojo.Articletype" >
+    update articletype
+    <set >
+      <if test="value != null" >
+        value = #{value,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null" >
+        pid = #{pid,jdbcType=INTEGER},
+      </if>
+      <if test="linkname != null" >
+        linkname = #{linkname,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pwms.pojo.Articletype" >
+    update articletype
+    set value = #{value,jdbcType=VARCHAR},
+      pid = #{pid,jdbcType=INTEGER},
+      linkname = #{linkname,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

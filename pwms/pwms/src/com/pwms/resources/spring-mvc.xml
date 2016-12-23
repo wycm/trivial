@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xsi:schemaLocation="http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc-3.1.xsd
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+    <!-- 自动扫描的包名 -->
+    <context:component-scan base-package="com.pwms.controller"></context:component-scan>
+    <!-- 默认的注解映射的支持 -->
+    <mvc:annotation-driven />
+    <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean" /> 
+    <!-- 直接访问 -->
+    <mvc:resources mapping="/skin/**" location="/res/skin/" /><!-- 管理员首页更换皮肤 -->
+    <mvc:resources mapping="/admin/**" location="/WEB-INF/views/admin/" />
+    <mvc:resources mapping="/res/**" location="/res/" />
+    <mvc:resources mapping="/upload/**" location="/upload/" />
+    <mvc:resources mapping="/**" location="/WEB-INF/views/website/" />
+    <!-- 视图解释类 -->
+    <bean
+        class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/views/" />
+        <!--可为空,方便实现自已的依据扩展名来选择视图解释类的逻辑 -->
+        <property name="suffix" value=".jsp" />
+    </bean>
+        <!-- 拦截器 -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/process/myprocess.html"/>
+            <mvc:mapping path="/user/**"/>
+            <mvc:mapping path="/school/**"/>
+            <bean class="com.pwms.interceptor.UserVerifyInterceptor">
+            <property name="excludedUrls">
+                    <list>
+                        <value>/dxgg/list.html</value>
+                        <value>/login</value><!-- 不拦截登录请求 -->
+                    </list>
+            </property>
+            </bean>
+        </mvc:interceptor>
+    </mvc:interceptors> 
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">  
+        <property name="defaultEncoding" value="utf-8"></property>   
+        <property name="maxUploadSize" value="10485760000"></property>  
+        <property name="maxInMemorySize" value="40960"></property>  
+   </bean>
+<bean class ="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" >  
+    <property name="messageConverters">  
+  		<list>  
+   			<ref bean="mappingJacksonHttpMessageConverter" /><!-- json转换器 -->  
+  		</list>  
+	</property>  
+</bean>      
+<bean id="mappingJacksonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter" />  
+<bean class ="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" > 
+	    <property name="messageConverters"> 
+	  		<list> 
+	   			<ref bean="mappingJacksonHttpMessageConverter" /><!-- json转换器 --> 
+	  		</list> 
+		</property> 
+</bean>   
+</beans>

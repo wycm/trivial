@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.pwms.dao.UserinfoMapper">
+  <resultMap id="BaseResultMap" type="com.pwms.pojo.Userinfo">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="student_id" jdbcType="VARCHAR" property="studentId" />
+    <result column="user_class" jdbcType="INTEGER" property="userClass" />
+    <result column="sex" jdbcType="VARCHAR" property="sex" />
+    <result column="nation" jdbcType="VARCHAR" property="nation" />
+    <result column="native_place" jdbcType="VARCHAR" property="nativePlace" />
+    <result column="birthday" jdbcType="DATE" property="birthday" javaType="java.sql.Date"/>
+    <result column="posttion" jdbcType="VARCHAR" property="posttion" />
+    <result column="dateline" jdbcType="DATE" property="dateline" javaType="java.sql.Date"/>
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="contacts" jdbcType="VARCHAR" property="contacts" />
+    <result column="train_educat" jdbcType="VARCHAR" property="trainEducat" />
+    <result column="inspect" jdbcType="VARCHAR" property="inspect" />
+    <result column="train_date" jdbcType="DATE" property="trainDate" javaType="java.sql.Date"/>
+    <result column="active_date" jdbcType="DATE" property="activeDate" javaType="java.sql.Date"/>
+    <result column="party_grade" jdbcType="INTEGER" property="partyGrade" />
+    <result column="formal_date" jdbcType="DATE" property="formalDate" javaType="java.sql.Date"/>
+    <result column="join_date" jdbcType="DATE" property="joinDate" javaType="java.sql.Date"/>
+    <result column="ready_party_date" jdbcType="DATE" property="readyPartyDate" javaType="java.sql.Date"/>
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="note" jdbcType="VARCHAR" property="note" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, name, student_id, user_class, sex, nation, native_place, birthday, posttion, 
+    dateline, phone, contacts, train_educat, inspect, train_date, active_date, party_grade, 
+    formal_date, join_date, ready_party_date, address, email, note, type, user_id
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from userinfo
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByUserid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from userinfo
+    where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from userinfo
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.pwms.pojo.Userinfo">
+    insert into userinfo (id, name, student_id, 
+      user_class, sex, nation, 
+      native_place, birthday, posttion, 
+      dateline, phone, contacts, 
+      train_educat, inspect, train_date, 
+      active_date, party_grade, formal_date, 
+      join_date, ready_party_date, address, 
+      email, note, type, 
+      user_id)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR}, #{studentId,jdbcType=VARCHAR}, 
+      #{userClass,jdbcType=INTEGER}, #{sex,jdbcType=VARCHAR}, #{nation,jdbcType=VARCHAR}, 
+      #{nativePlace,jdbcType=VARCHAR}, #{birthday,jdbcType=DATE}, #{posttion,jdbcType=VARCHAR}, 
+      #{dateline,jdbcType=DATE}, #{phone,jdbcType=VARCHAR}, #{contacts,jdbcType=VARCHAR}, 
+      #{trainEducat,jdbcType=VARCHAR}, #{inspect,jdbcType=VARCHAR}, #{trainDate,jdbcType=DATE}, 
+      #{activeDate,jdbcType=DATE}, #{partyGrade,jdbcType=INTEGER}, #{formalDate,jdbcType=DATE}, 
+      #{joinDate,jdbcType=DATE}, #{readyPartyDate,jdbcType=DATE}, #{address,jdbcType=VARCHAR}, 
+      #{email,jdbcType=VARCHAR}, #{note,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER}, 
+      #{userId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.pwms.pojo.Userinfo">
+    insert into userinfo
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="studentId != null">
+        student_id,
+      </if>
+      <if test="userClass != null">
+        user_class,
+      </if>
+      <if test="sex != null">
+        sex,
+      </if>
+      <if test="nation != null">
+        nation,
+      </if>
+      <if test="nativePlace != null">
+        native_place,
+      </if>
+      <if test="birthday != null">
+        birthday,
+      </if>
+      <if test="posttion != null">
+        posttion,
+      </if>
+      <if test="dateline != null">
+        dateline,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="contacts != null">
+        contacts,
+      </if>
+      <if test="trainEducat != null">
+        train_educat,
+      </if>
+      <if test="inspect != null">
+        inspect,
+      </if>
+      <if test="trainDate != null">
+        train_date,
+      </if>
+      <if test="activeDate != null">
+        active_date,
+      </if>
+      <if test="partyGrade != null">
+        party_grade,
+      </if>
+      <if test="formalDate != null">
+        formal_date,
+      </if>
+      <if test="joinDate != null">
+        join_date,
+      </if>
+      <if test="readyPartyDate != null">
+        ready_party_date,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="email != null">
+        email,
+      </if>
+      <if test="note != null">
+        note,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="studentId != null">
+        #{studentId,jdbcType=VARCHAR},
+      </if>
+      <if test="userClass != null">
+        #{userClass,jdbcType=INTEGER},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="nation != null">
+        #{nation,jdbcType=VARCHAR},
+      </if>
+      <if test="nativePlace != null">
+        #{nativePlace,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null">
+        #{birthday,jdbcType=DATE},
+      </if>
+      <if test="posttion != null">
+        #{posttion,jdbcType=VARCHAR},
+      </if>
+      <if test="dateline != null">
+        #{dateline,jdbcType=DATE},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="contacts != null">
+        #{contacts,jdbcType=VARCHAR},
+      </if>
+      <if test="trainEducat != null">
+        #{trainEducat,jdbcType=VARCHAR},
+      </if>
+      <if test="inspect != null">
+        #{inspect,jdbcType=VARCHAR},
+      </if>
+      <if test="trainDate != null">
+        #{trainDate,jdbcType=DATE},
+      </if>
+      <if test="activeDate != null">
+        #{activeDate,jdbcType=DATE},
+      </if>
+      <if test="partyGrade != null">
+        #{partyGrade,jdbcType=INTEGER},
+      </if>
+      <if test="formalDate != null">
+        #{formalDate,jdbcType=DATE},
+      </if>
+      <if test="joinDate != null">
+        #{joinDate,jdbcType=DATE},
+      </if>
+      <if test="readyPartyDate != null">
+        #{readyPartyDate,jdbcType=DATE},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null">
+        #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.pwms.pojo.Userinfo">
+    update userinfo
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="studentId != null">
+        student_id = #{studentId,jdbcType=VARCHAR},
+      </if>
+      <if test="userClass != null">
+        user_class = #{userClass,jdbcType=INTEGER},
+      </if>
+      <if test="sex != null">
+        sex = #{sex,jdbcType=VARCHAR},
+      </if>
+      <if test="nation != null">
+        nation = #{nation,jdbcType=VARCHAR},
+      </if>
+      <if test="nativePlace != null">
+        native_place = #{nativePlace,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null">
+        birthday = #{birthday,jdbcType=DATE},
+      </if>
+      <if test="posttion != null">
+        posttion = #{posttion,jdbcType=VARCHAR},
+      </if>
+      <if test="dateline != null">
+        dateline = #{dateline,jdbcType=DATE},
+      </if>
+      <if test="phone != null">
+        phone = #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="contacts != null">
+        contacts = #{contacts,jdbcType=VARCHAR},
+      </if>
+      <if test="trainEducat != null">
+        train_educat = #{trainEducat,jdbcType=VARCHAR},
+      </if>
+      <if test="inspect != null">
+        inspect = #{inspect,jdbcType=VARCHAR},
+      </if>
+      <if test="trainDate != null">
+        train_date = #{trainDate,jdbcType=DATE},
+      </if>
+      <if test="activeDate != null">
+        active_date = #{activeDate,jdbcType=DATE},
+      </if>
+      <if test="partyGrade != null">
+        party_grade = #{partyGrade,jdbcType=INTEGER},
+      </if>
+      <if test="formalDate != null">
+        formal_date = #{formalDate,jdbcType=DATE},
+      </if>
+      <if test="joinDate != null">
+        join_date = #{joinDate,jdbcType=DATE},
+      </if>
+      <if test="readyPartyDate != null">
+        ready_party_date = #{readyPartyDate,jdbcType=DATE},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="email != null">
+        email = #{email,jdbcType=VARCHAR},
+      </if>
+      <if test="note != null">
+        note = #{note,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        type = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.pwms.pojo.Userinfo">
+    update userinfo
+    set name = #{name,jdbcType=VARCHAR},
+      student_id = #{studentId,jdbcType=VARCHAR},
+      user_class = #{userClass,jdbcType=INTEGER},
+      sex = #{sex,jdbcType=VARCHAR},
+      nation = #{nation,jdbcType=VARCHAR},
+      native_place = #{nativePlace,jdbcType=VARCHAR},
+      birthday = #{birthday,jdbcType=DATE},
+      posttion = #{posttion,jdbcType=VARCHAR},
+      dateline = #{dateline,jdbcType=DATE},
+      phone = #{phone,jdbcType=VARCHAR},
+      contacts = #{contacts,jdbcType=VARCHAR},
+      train_educat = #{trainEducat,jdbcType=VARCHAR},
+      inspect = #{inspect,jdbcType=VARCHAR},
+      train_date = #{trainDate,jdbcType=DATE},
+      active_date = #{activeDate,jdbcType=DATE},
+      party_grade = #{partyGrade,jdbcType=INTEGER},
+      formal_date = #{formalDate,jdbcType=DATE},
+      join_date = #{joinDate,jdbcType=DATE},
+      ready_party_date = #{readyPartyDate,jdbcType=DATE},
+      address = #{address,jdbcType=VARCHAR},
+      email = #{email,jdbcType=VARCHAR},
+      note = #{note,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      user_id = #{userId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+ </mapper> 

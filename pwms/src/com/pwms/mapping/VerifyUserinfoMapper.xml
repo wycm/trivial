@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.pwms.dao.VerifyUserinfoMapper" >
+  <resultMap id="VerifyUserinfoResultMap" type="com.pwms.pojo.VerifyUserinfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="name" property="name" jdbcType="VARCHAR" />
+    <result column="identity_id" property="identity_id" jdbcType="VARCHAR" />
+    <result column="student_id" property="student_id" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="VerifyUserinfo_Column_List" >
+    id, name, identity_id, student_id
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="VerifyUserinfoResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="VerifyUserinfo_Column_List" />
+    from verify_userinfo
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <select id="selectByVerifyuserinfo" resultMap="VerifyUserinfoResultMap" >
+    select 
+    <include refid="VerifyUserinfo_Column_List" />
+    from verify_userinfo
+    where name = #{1, jdbcType=VARCHAR} and identity_id = #{0, jdbcType=VARCHAR}
+    and student_id = #{2, jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from verify_userinfo
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.pwms.pojo.VerifyUserinfo" >
+    insert into verify_userinfo (id, identity_id, student_id, 
+      name)
+    values (#{id,jdbcType=INTEGER}, #{identity_id,jdbcType=VARCHAR}, 
+      #{student_id,jdbcType=INTEGER}, #{name,jdbcType=VARCHAR})
+  </insert>
+</mapper>
